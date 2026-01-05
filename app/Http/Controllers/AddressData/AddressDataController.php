@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\AddressData\AddressDataIndexRequest;
 use App\Http\Requests\AddressData\AddressDataStoreRequest;
+use App\Http\Requests\AddressData\AddressDataUpdateRequest;
+use App\Http\Requests\AddressData\AddressDataDestroyRequest;
 
 use App\Http\Resources\AddressData\AddressDataResource;
 use App\Http\Resources\AddressData\AddressDataCollection;
@@ -36,5 +38,13 @@ class AddressDataController extends Controller
 
     public function store(AddressDataStoreRequest $request) {
         return parent::abstractStore($request);
+    }
+
+    public function update(AddressDataUpdateRequest $request) {
+        return parent::abstractUpdate($request);
+    }
+
+    public function destroy(AddressDataDestroyRequest $request) {
+        $deleted = $this->service->destroy($request->validated());
     }
 }

@@ -24,4 +24,18 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
     public function store(array $data): AddressData {
         return AddressData::create($data);
     }
+
+    public function update(array $data): AddressData {
+        $id = (int) $data['id'];
+
+        $address = AddressData::findOrFail($id);
+        $address->update($data);
+
+        return $address;
+    }
+
+    public function destroy(int $id): Bool {
+        $address = AddressData::findOrFail($id);
+        return (bool) $address->delete();
+    }
 }

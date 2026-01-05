@@ -27,4 +27,12 @@ abstract class Controller
 
         return new $resource($data);
     }
+
+    protected function abstractUpdate(FormRequest $request) {
+        $data = $this->service()->update($request->validated());
+
+        $resource = $this->resource();
+
+        return new $resource($data);
+    }
 }
