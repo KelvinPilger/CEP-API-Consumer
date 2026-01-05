@@ -10,4 +10,6 @@ interface AddressDataRepositoryInterface
 {
     public function index(array $data): LengthAwarePaginator;
     public function store(array $data): AddressData;
+    public function update(array $data): AddressData;
+    public function destroy(int $id): Bool;
 }
