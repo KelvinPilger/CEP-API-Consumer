@@ -25,7 +25,7 @@ class AddressDataService
 
     public function store(array $data): AddressData {
         $cep = preg_replace('/\D/', '', $data['cep']);
-        try{
+        try {
             $response = Http::get("https://brasilapi.com.br/api/cep/v2/{$cep}")->throw();
 
             $data = $response->json();
