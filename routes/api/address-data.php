@@ -6,4 +6,5 @@ use App\Models\AdressData;
 
 Route::prefix('address')->group(function () {
     Route::get('/', [AddressDataController::class, 'index']);
+    Route::post('/{cep}', [AddressDataController::class, 'store']);
 });

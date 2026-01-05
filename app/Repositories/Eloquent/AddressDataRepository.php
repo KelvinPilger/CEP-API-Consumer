@@ -20,4 +20,8 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
 
         return AddressData::paginate($perPage);
     }
+
+    public function store(array $data): AddressData {
+        return AddressData::create($data);
+    }
 }

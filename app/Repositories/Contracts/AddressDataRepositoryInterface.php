@@ -9,4 +9,5 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 interface AddressDataRepositoryInterface
 {
     public function index(array $data): LengthAwarePaginator;
+    public function store(array $data): AddressData;
 }

@@ -23,6 +23,8 @@ abstract class Controller
     protected function abstractStore(FormRequest $request) {
         $data = $this->service()->store($request->validated());
 
-        $resource = $this->resource($data);
+        $resource = $this->resource();
+
+        return new $resource($data);
     }
 }
