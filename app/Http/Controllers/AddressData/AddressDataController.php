@@ -45,6 +45,6 @@ class AddressDataController extends Controller
     }
 
     public function destroy(AddressDataDestroyRequest $request) {
-        $deleted = $this->service->destroy($request->validated());
+        return parent::abstractDestroy($request);
     }
 }

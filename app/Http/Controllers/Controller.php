@@ -35,4 +35,27 @@ abstract class Controller
 
         return new $resource($data);
     }
+
+    protected function abstractDestroy(FormRequest $request) {
+        try {
+            $deleted = $this->service()->destroy($request->validated());
+
+            return response()->json([
+                'code' => Response::HTTP_OK,
+                'deleted' => $deleted,
+                'message' => 'Registro excluso com sucesso!'
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+				'code' => Response::HTTP_NOT_FOUND,
+				'message' => 'O registro informado não foi encontrado!'
+			], Response::HTTP_NOT_FOUND);
+        } catch (Exception $e) {
+           return response()->json([
+				'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+				'message' => 'Erro interno, não foi possível excluir o registro.',
+				'exception' => $e->getMessage()
+			]);
+        }
+    }
 }
