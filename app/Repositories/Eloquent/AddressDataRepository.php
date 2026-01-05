@@ -16,26 +16,60 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
     }
 
     public function index(array $data): LengthAwarePaginator {
-        $perPage = $data['perPage'] ?? 20;
+        try {
+            $perPage = $data['perPage'] ?? 20;
 
-        return AddressData::paginate($perPage);
+            return AddressData::paginate($perPage);
+        } catch (Exception $e) {
+            throw new Exception('Não foi possível realizar a consulta dos endereços.');
+        }
     }
 
     public function store(array $data): AddressData {
-        return AddressData::create($data);
+        try {
+            return AddressData::create($data);
+        } catch (Exception $e) {
+            throw new Exception('Não foi possível salvar o endereço.');
+        }
     }
 
     public function update(array $data): AddressData {
-        $id = (int) $data['id'];
+        try {
+            $id = (int) $data['id'];
 
-        $address = AddressData::findOrFail($id);
-        $address->update($data);
+            $address = AddressData::findOrFail($id);
+            $address->update($data);
 
-        return $address;
+            return $address;
+        }  catch (Exception $e) {
+            throw new Exception('Não foi possível atualizar o endereço.');
+        }
     }
 
     public function destroy(int $id): Bool {
-        $address = AddressData::findOrFail($id);
-        return (bool) $address->delete();
+        try {
+            $address = AddressData::findOrFail($id);
+            return (bool) $address->delete();
+        }  catch (Exception $e) {
+            throw new Exception('Não foi possível excluir o endereço.');
+        }
+    }
+
+    public function show(int $id): AddressData {
+        try {
+            return $address = $address = AddressData::findOrFail($id);
+        }  catch (Exception $e) {
+            throw new Exception('Não foi possível visualizar o endereço.');
+        }
+    }
+
+    public function restore(int $id): Bool {
+        try {
+            return AddressData::onlyTrashed()
+                ->findOrFail($id)
+                ->restore();
+        } catch (Exception $e) {
+            throw new Exception('Não foi possível realizar a restauração do registro.');
+        }
     }
 }

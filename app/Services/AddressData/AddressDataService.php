@@ -89,4 +89,22 @@ class AddressDataService
             throw new \ModelNotFoundException('O ID informado não existe no banco de dados.');
         }
     }
+
+    public function show(array $data): AddressData {
+        try {
+            $id = (int) $data['id'];
+            return $this->repository->show($id);
+        } catch (\ModelNotFoundException $e) {
+            throw new \ModelNotFoundException('O ID informado não existe no banco de dados.');
+        }
+    }
+
+    public function restore(array $data): Bool {
+        try {
+            $id = (int) $data['id'];
+            return $this->repository->restore($id);
+        } catch (\ModelNotFoundException $e) {
+            throw new \ModelNotFoundException('O ID informado não existe no banco de dados.');
+        }
+    }
 }

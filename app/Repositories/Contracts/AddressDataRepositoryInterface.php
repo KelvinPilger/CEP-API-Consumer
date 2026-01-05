@@ -12,4 +12,6 @@ interface AddressDataRepositoryInterface
     public function store(array $data): AddressData;
     public function update(array $data): AddressData;
     public function destroy(int $id): Bool;
+    public function show(int $id): AddressData;
+    public function restore(int $id): Bool;
 }
