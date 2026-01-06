@@ -27,7 +27,7 @@ class AddressDataUpdateRequest extends FormRequest
             'id.integer' => 'O ID deve ser um valor do tipo inteiro.',
             'id.exists' => 'O ID informado não existe na tabela de endereços.',
             'cep.required' => 'O CEP deve ser informado.',
-            'cep.string'=> 'O CEP deve ser um valor do tipo inteiro.',
+            'cep.string'=> 'O CEP deve ser um valor do tipo string.',
             'cep.regex' => 'O CEP informado não está correto.'
         ];
     }

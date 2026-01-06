@@ -37,26 +37,13 @@ abstract class Controller
     }
 
     protected function abstractDestroy(FormRequest $request) {
-        try {
-            $deleted = $this->service()->destroy($request->validated());
+        $deleted = $this->service()->destroy($request->validated());
 
-            return response()->json([
-                'code' => Response::HTTP_OK,
-                'deleted' => $deleted,
-                'message' => 'Registro excluso com sucesso!'
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-				'code' => Response::HTTP_NOT_FOUND,
-				'message' => 'O registro informado não foi encontrado!'
-			], Response::HTTP_NOT_FOUND);
-        } catch (Exception $e) {
-           return response()->json([
-				'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-				'message' => 'Erro interno, não foi possível excluir o registro.',
-				'exception' => $e->getMessage()
-			]);
-        }
+        return response()->json([
+            'code' => Response::HTTP_OK,
+            'deleted' => $deleted,
+            'message' => 'Registro excluso com sucesso!'
+        ]);
     }
 
     protected function abstractShow(FormRequest $request) {
@@ -68,25 +55,12 @@ abstract class Controller
     }
 
     protected function abstractRestore(FormRequest $request) {
-        try {
-            $restored = $this->service()->restore($request->validated());
+        $restored = $this->service()->restore($request->validated());
 
-            return response()->json([
-                'code' => Response::HTTP_OK,
-                'restored' => $restored,
-                'message' => 'Registro restaurado com sucesso!'
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json([
-				'code' => Response::HTTP_NOT_FOUND,
-				'message' => 'O registro informado não foi encontrado!'
-			], Response::HTTP_NOT_FOUND);
-        } catch (Exception $e) {
-           return response()->json([
-				'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-				'message' => 'Erro interno, não foi possível restaurar o registro.',
-				'exception' => $e->getMessage()
-			]);
-        }
+        return response()->json([
+            'code' => Response::HTTP_OK,
+            'restored' => $restored,
+            'message' => 'Registro restaurado com sucesso!'
+        ]);
     }
 }

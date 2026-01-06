@@ -7,7 +7,8 @@ use App\Repositories\Contracts\AddressDataRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AddressDataRepository extends BaseRepository implements AddressDataRepositoryInterface
 {
@@ -29,14 +30,21 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
     public function update(array $data): AddressData {
         $id = (int) $data['id'];
 
-        $address = AddressData::findOrFail($id);
+        $address = AddressData::withTrashed()
+            ->findOrFail($id);
         $address->update($data);
 
         return $address;
     }
 
     public function destroy(int $id): Bool {
-        $address = AddressData::findOrFail($id);
+        $address = AddressData::withTrashed()
+            ->findOrFail($id);
+
+        if($address->trashed()) {
+            throw new HttpException(Response::HTTP_CONFLICT, 'O registro informado já se encontra como excluído/inativo.');
+        }
+
         return (bool) $address->delete();
     }
 
@@ -46,8 +54,14 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
     }
 
     public function restore(int $id): Bool {
-        return AddressData::onlyTrashed()
-            ->findOrFail($id)
-            ->restore();
+
+        $address = AddressData::withTrashed()
+            ->findOrFail($id);
+
+        if(!$address->trashed()) {
+            throw new HttpException(Response::HTTP_CONFLICT, 'O registro informado já se encontra ativo/restaurado.');
+        }
+
+        return (bool) $address->restore();
     }
 }

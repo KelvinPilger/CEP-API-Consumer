@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Throwable;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -21,22 +22,24 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ModelNotFoundException $e, Request $request) {
-            return response()->json([
-                'code' => Response::HTTP_NOT_FOUND,
-                'success' => false,
-                'message' => 'O registro informado não pode ser encontrado, ou foi excluído.',
-            ], Response::HTTP_NOT_FOUND);
-
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'code' => Response::HTTP_NOT_FOUND,
+                    'success' => false,
+                    'message' => 'O registro informado não pode ser encontrado, ou foi excluído.',
+                ], Response::HTTP_NOT_FOUND);
+            }
             return null;
         });
 
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+            if ($request->is('api/*')) {
                 return response()->json([
                     'code' => Response::HTTP_NOT_FOUND,
                     'success' => false,
-                    'message' => 'A rota ou recurso não foi encontrado.',
+                    'message' => 'O registro não foi encontrado ou foi excluso.',
                 ], Response::HTTP_NOT_FOUND);
-
+            }
             return null;
         });
     })->create();
