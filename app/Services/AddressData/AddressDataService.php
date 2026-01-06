@@ -8,6 +8,12 @@ use App\Repositories\Contracts\AddressDataRepositoryInterface;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Database\EloquentModelNotFoundException;
+use App\Exceptions\Cep\{
+    InvalidCepException,
+    CepNotFoundException,
+    CepGatewayTimeoutException
+};
 
 class AddressDataService
 {
@@ -36,19 +42,16 @@ class AddressDataService
 
             $status = $e->response?->status();
 
-            if ($status === null) {
+            if($status === null) {
                 throw new HttpException(503, 'Falha de conexão ao consultar o serviço de CEP.');
             }
 
-            if($status === 404) {
-                throw new \DomainException('O CEP informado não foi encontrado.');
-            }
-
-            if($status === 400) {
-                throw new \InvalidArgumentException('O CEP informado é inválido ou está fora do padrão desejado');
-            }
-
-            throw new HttpException(502, 'O servidor não conseguiu responder a solicitação.');
+            return match($status) {
+                404 => throw new CepNotFoundException(),
+                400 => throw new InvalidCepException(),
+                504 => throw new CepGatewayTimeout(),
+                default => throw new HttpException(502, 'O serviço de CEP não conseguiu responder à solicitação.')
+            };
         }
     }
 
@@ -63,21 +66,19 @@ class AddressDataService
             return $this->repository->update($data);
 
         } catch(RequestException $e) {
+
             $status = $e->response?->status();
 
-            if ($status === null) {
+            if($status === null) {
                 throw new HttpException(503, 'Falha de conexão ao consultar o serviço de CEP.');
             }
 
-            if($status === 404) {
-                throw new \DomainException('O CEP informado não foi encontrado.');
-            }
-
-            if($status === 400) {
-                throw new \InvalidArgumentException('O CEP informado é inválido ou está fora do padrão desejado');
-            }
-
-            throw new HttpException(502, 'O servidor não conseguiu responder a solicitação.');
+            match($status) {
+                400 => throw new InvalidCepException(),
+                404 => throw new CepNotFoundException(),
+                504 => throw new CepGatewayTimeoutException(),
+                default => throw new HttpException(502, 'O serviço de CEP não conseguiu responder à solicitação.')
+            };
         }
     }
 
@@ -85,8 +86,8 @@ class AddressDataService
         try {
             $id = (int) $data['id'];
             return $this->repository->destroy($id);
-        } catch (\ModelNotFoundException $e) {
-            throw new \ModelNotFoundException('O ID informado não existe no banco de dados.');
+        } catch (Throwable $e) {
+            throw $e;
         }
     }
 
@@ -94,8 +95,8 @@ class AddressDataService
         try {
             $id = (int) $data['id'];
             return $this->repository->show($id);
-        } catch (\ModelNotFoundException $e) {
-            throw new \ModelNotFoundException('O ID informado não existe no banco de dados.');
+        } catch (Throwable $e) {
+            throw $e;
         }
     }
 
@@ -103,8 +104,8 @@ class AddressDataService
         try {
             $id = (int) $data['id'];
             return $this->repository->restore($id);
-        } catch (\ModelNotFoundException $e) {
-            throw new \ModelNotFoundException('O ID informado não existe no banco de dados.');
+        } catch (Throwable $e) {
+            throw $e;
         }
     }
 }
