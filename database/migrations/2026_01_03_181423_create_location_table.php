@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('address_id')
             ->constrained('address_data');
             $table->string('type', 15);
-            $table->decimal('longitude', 6, 12)->nullable();
-            $table->decimal('latitude', 6, 12)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
             $table->timestamps();
         });
     }

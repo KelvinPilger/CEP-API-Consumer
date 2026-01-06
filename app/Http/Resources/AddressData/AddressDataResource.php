@@ -3,6 +3,7 @@
 namespace App\Http\Resources\AddressData;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\Location\LocationResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AddressDataResource extends JsonResource
@@ -21,7 +22,10 @@ class AddressDataResource extends JsonResource
             'city' => $this->city,
             'neighborhood' => $this->neighborhood ?? 'N/A',
             'street' => $this->street ?? 'N/A',
-            'created_at' => $this->created_at
+            'created_at' => $this->created_at,
+            'location' => [
+                new LocationResource($this->whenLoaded('location'))
+            ],
         ];
     }
 }

@@ -20,7 +20,8 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
     public function index(array $data): LengthAwarePaginator {
         $perPage = $data['perPage'] ?? 20;
 
-        return AddressData::paginate($perPage);
+        return AddressData::with('location')
+            ->paginate($perPage);
     }
 
     public function store(array $data): AddressData {
@@ -49,7 +50,8 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
     }
 
     public function show(int $id): AddressData {
-        return $address = $address = AddressData::findOrFail($id);
+        return $address = AddressData::with('location')
+            ->findOrFail($id);
 
     }
 
