@@ -22,4 +22,8 @@ class LocationRepository extends BaseRepository implements LocationRepositoryInt
 
         return Location::paginate($perPage);
     }
+
+    public function show(int $id): Location {
+        return Location::findOrFail($id);
+    }
 }

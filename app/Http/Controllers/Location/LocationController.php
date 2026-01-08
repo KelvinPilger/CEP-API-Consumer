@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Location;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\Location\LocationIndexRequest;
+use App\Http\Requests\Location\LocationShowRequest;
 use App\Services\Location\LocationService;
 use App\Http\Resources\Location\LocationResource;
 use App\Http\Resources\Location\LocationCollection;
-
-use App\Http\Requests\Location\LocationIndexRequest;
 
 class LocationController extends Controller
 {
@@ -31,5 +31,9 @@ class LocationController extends Controller
 
     public function index(LocationIndexRequest $request) {
         return parent::abstractIndex($request);
+    }
+
+    public function show(LocationShowRequest $request) {
+        return parent::abstractShow($request);
     }
 }
