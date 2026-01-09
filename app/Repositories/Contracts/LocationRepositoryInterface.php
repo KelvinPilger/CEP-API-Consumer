@@ -9,4 +9,5 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 interface LocationRepositoryInterface
 {
     public function index(array $data): LengthAwarePaginator;
+    public function destroy(int $id): Bool;
 }

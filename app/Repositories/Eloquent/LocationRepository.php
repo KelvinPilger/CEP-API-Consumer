@@ -22,4 +22,10 @@ class LocationRepository extends BaseRepository implements LocationRepositoryInt
 
         return Location::paginate($perPage);
     }
+
+    public function destroy(int $id): Bool {
+        $location = Location::findOrFail($id);
+
+        return (bool) $location->delete();
+    }
 }
