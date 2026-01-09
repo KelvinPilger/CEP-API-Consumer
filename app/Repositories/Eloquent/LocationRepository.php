@@ -26,4 +26,10 @@ class LocationRepository extends BaseRepository implements LocationRepositoryInt
     public function show(int $id): Location {
         return Location::findOrFail($id);
     }
+
+    public function destroy(int $id): Bool {
+        $location = Location::findOrFail($id);
+
+        return (bool) $location->delete();
+    }
 }

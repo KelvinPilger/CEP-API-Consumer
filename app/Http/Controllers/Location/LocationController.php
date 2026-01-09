@@ -11,6 +11,9 @@ use App\Services\Location\LocationService;
 use App\Http\Resources\Location\LocationResource;
 use App\Http\Resources\Location\LocationCollection;
 
+use App\Http\Requests\Location\LocationIndexRequest;
+use App\Http\Requests\Location\LocationDestroyRequest;
+
 class LocationController extends Controller
 {
     public function __construct(LocationService $service) {
@@ -36,4 +39,9 @@ class LocationController extends Controller
     public function show(LocationShowRequest $request) {
         return parent::abstractShow($request);
     }
+
+    public function destroy(LocationDestroyRequest $request) {
+        return parent::abstractDestroy($request);
+    }
 }
+

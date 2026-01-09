@@ -10,5 +10,5 @@ interface LocationRepositoryInterface
 {
     public function index(array $data): LengthAwarePaginator;
     public function show(int $id): Location;
-
+    public function destroy(int $id): Bool;
 }
