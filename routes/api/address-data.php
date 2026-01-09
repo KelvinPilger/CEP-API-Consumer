@@ -12,4 +12,3 @@ Route::prefix('address')->group(function () {
     Route::get('/{id}', [AddressDataController::class, 'show']);
     Route::patch('/{id}', [AddressDataController::class, 'restore']);
 });
-

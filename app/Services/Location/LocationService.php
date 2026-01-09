@@ -25,6 +25,13 @@ class LocationService
         try {
             $id = (int) $data['id'];
             return $this->repository->show($id);
+        }
+    }
+
+    public function destroy(array $data): Bool {
+        try {
+            $id = (int) $data['id'];
+            return $this->repository->destroy($id);
         } catch (Throwable $e) {
             throw $e;
         }
