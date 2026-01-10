@@ -25,6 +25,8 @@ class LocationService
         try {
             $id = (int) $data['id'];
             return $this->repository->show($id);
+        } catch (Throwable $e) {
+            throw $e;
         }
     }
 
@@ -32,6 +34,14 @@ class LocationService
         try {
             $id = (int) $data['id'];
             return $this->repository->destroy($id);
+        } catch (Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function update(array $data): Location {
+        try {
+            return $this->repository->update($data);
         } catch (Throwable $e) {
             throw $e;
         }

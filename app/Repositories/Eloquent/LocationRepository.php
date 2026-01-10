@@ -32,4 +32,11 @@ class LocationRepository extends BaseRepository implements LocationRepositoryInt
 
         return (bool) $location->delete();
     }
+
+    public function update(array $data): Location {
+        $location = Location::findOrFail($data['id']);
+        $location->update($data);
+
+        return $location;
+    }
 }
