@@ -46,4 +46,12 @@ class LocationService
             throw $e;
         }
     }
+
+    public function store(array $data): Location {
+        try {
+            return $this->repository->store($data);
+        } catch (Throwable $e) {
+            throw $e;
+        }
+    }
 }

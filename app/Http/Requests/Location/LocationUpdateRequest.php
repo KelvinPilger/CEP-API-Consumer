@@ -20,7 +20,7 @@ class LocationUpdateRequest extends FormRequest
             'address_id' => ['sometimes', 'integer'],
             'type' => ['sometimes', 'string'],
             'longitude' => ['sometimes', 'numeric', 'regex:/^-?\d+([.,]\d{1,7})?$/'],
-        'latitude'  => ['sometimes', 'numeric', 'regex:/^-?\d+([.,]\d{1,7})?$/'],
+            'latitude'  => ['sometimes', 'numeric', 'regex:/^-?\d+([.,]\d{1,7})?$/'],
 
         ];
     }

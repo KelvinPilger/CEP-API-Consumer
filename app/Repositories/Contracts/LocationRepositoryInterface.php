@@ -12,4 +12,5 @@ interface LocationRepositoryInterface
     public function show(int $id): Location;
     public function destroy(int $id): Bool;
     public function update(array $data): Location;
+    public function store(array $data): Location;
 }

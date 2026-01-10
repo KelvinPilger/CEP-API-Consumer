@@ -39,4 +39,8 @@ class LocationRepository extends BaseRepository implements LocationRepositoryInt
 
         return $location;
     }
+
+    public function store(array $data): Location {
+        return Location::create($data);
+    }
 }

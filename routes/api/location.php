@@ -9,4 +9,5 @@ Route::prefix('location')->group(function () {
     Route::get('/{id}', [LocationController::class, 'show']);
     Route::delete('/{id}', [LocationController::class, 'destroy']);
     Route::put('/{id}', [LocationController::class, 'update']);
+    Route::post('/', [LocationController::class, 'store']);
 });
