@@ -25,7 +25,8 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
     }
 
     public function store(array $data): AddressData {
-        return AddressData::create($data);
+        $address = AddressData::create($data);
+        return $address;
     }
 
     public function update(array $data): AddressData {
@@ -33,6 +34,7 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
 
         $address = AddressData::withTrashed()
             ->findOrFail($id);
+
         $address->update($data);
 
         return $address;
@@ -52,7 +54,6 @@ class AddressDataRepository extends BaseRepository implements AddressDataReposit
     public function show(int $id): AddressData {
         return $address = AddressData::with('location')
             ->findOrFail($id);
-
     }
 
     public function restore(int $id): Bool {

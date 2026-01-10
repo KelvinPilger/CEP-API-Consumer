@@ -23,9 +23,7 @@ class AddressDataResource extends JsonResource
             'neighborhood' => $this->neighborhood ?? 'N/A',
             'street' => $this->street ?? 'N/A',
             'created_at' => $this->created_at,
-            'location' => [
-                new LocationResource($this->whenLoaded('location'))
-            ],
+            'location' => LocationResource::make($this->whenLoaded('location')),
         ];
     }
 }

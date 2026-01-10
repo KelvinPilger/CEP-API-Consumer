@@ -40,6 +40,18 @@ class LocationRepository extends BaseRepository implements LocationRepositoryInt
         return $location;
     }
 
+    public function upsertByAddressId(array $data): Location {
+        return Location::query()
+            ->updateOrCreate(
+                ['address_id' => $data['address_id']], $data);
+    }
+
+    public function findByAddressId(int $address_id): ?Location {
+        return Location::query()
+            ->where('address_id', $address_id)
+            ->first();
+    }
+
     public function store(array $data): Location {
         return Location::create($data);
     }

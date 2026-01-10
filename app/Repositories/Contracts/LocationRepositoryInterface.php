@@ -13,4 +13,6 @@ interface LocationRepositoryInterface
     public function destroy(int $id): Bool;
     public function update(array $data): Location;
     public function store(array $data): Location;
+    public function upsertByAddressId(array $data): Location;
+    public function findByAddressId(int $address_id): ?Location;
 }
