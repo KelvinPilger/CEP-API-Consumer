@@ -5,6 +5,8 @@ namespace App\Services\AddressData;
 use App\Models\AddressData;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\AddressDataRepositoryInterface;
+use App\Repositories\Contracts\LocationRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -17,8 +19,9 @@ use App\Exceptions\Cep\{
 
 class AddressDataService
 {
-    public function __construct(AddressDataRepositoryInterface $repository) {
+    public function __construct(AddressDataRepositoryInterface $repository, LocationRepositoryInterface $locationRepository) {
         $this->repository = $repository;
+        $this->locationRepository = $locationRepository;
     }
 
     public function index(array $data): LengthAwarePaginator {
@@ -32,11 +35,31 @@ class AddressDataService
     public function store(array $data): AddressData {
         $cep = preg_replace('/\D/', '', $data['cep']);
         try {
-            $response = Http::get("https://brasilapi.com.br/api/cep/v2/{$cep}")->throw();
+            $response = Http::timeout(3)
+                ->get("https://brasilapi.com.br/api/cep/v2/{$cep}")
+                ->throw();
 
-            $data = $response->json();
+            $payload = $response->json();
 
-            return $this->repository->store($data);
+            return DB::transaction(function () use ($payload) {
+                $addressData = $this->repository->store($payload);
+
+                if(data_get($payload, 'location.coordinates') !== [] && data_get($payload, 'location.coordinates') !== null) {
+
+                    $locationPayload = [
+                        'address_id' => $addressData->id,
+                        'type' => data_get($payload, 'location.type'),
+                        'latitude' => data_get($payload, 'location.coordinates.latitude'),
+                        'longitude' => data_get($payload, 'location.coordinates.longitude')
+                    ];
+
+                    $this->locationRepository->store($locationPayload);
+
+                    $addressData->loadMissing('location');
+                }
+
+                return $addressData;
+            });
 
         } catch(RequestException $e) {
 
@@ -59,11 +82,42 @@ class AddressDataService
         $cep = preg_replace('/\D/', '', $data['cep']);
 
         try {
-            $response = Http::get("https://brasilapi.com.br/api/cep/v2/{$cep}")->throw();
+            $response = Http::timeout(3)
+                ->get("https://brasilapi.com.br/api/cep/v2/{$cep}")
+                ->throw();
 
-            $data = array_merge($data, $response->json());
+            $payload = array_merge($data, $response->json());
 
-            return $this->repository->update($data);
+            return DB::transaction(function () use ($payload, $cep) {
+
+                $addressId = (int) $payload['id'];
+                $addressModel = $this->repository->show($addressId);
+
+                $addressData = $this->repository->update($payload);
+
+                if(data_get($payload, 'location.coordinates') !== [] && data_get($payload, 'location.coordinates') !== null) {
+
+                    $locationPayload = [
+                        'address_id' => $addressId,
+                        'type' => data_get($payload, 'location.type'),
+                        'latitude' => data_get($payload, 'location.coordinates.latitude'),
+                        'longitude' => data_get($payload, 'location.coordinates.longitude')
+                    ];
+
+                    $this->locationRepository->upsertByAddressId($locationPayload);
+
+                    $addressData->loadMissing('location');
+
+                } else {
+                    $location = $this->locationRepository->findByAddressId($addressId);
+
+                    if($location !== null && $addressModel->cep !== $cep) {
+                        $this->locationRepository->destroy($location->id);
+                    }
+                }
+
+                return $addressData;
+            });
 
         } catch(RequestException $e) {
 

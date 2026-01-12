@@ -7,12 +7,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Location\LocationIndexRequest;
 use App\Http\Requests\Location\LocationShowRequest;
+use App\Http\Requests\Location\LocationUpdateRequest;
+use App\Http\Requests\Location\LocationDestroyRequest;
+use App\Http\Requests\Location\LocationStoreRequest;
 use App\Services\Location\LocationService;
 use App\Http\Resources\Location\LocationResource;
 use App\Http\Resources\Location\LocationCollection;
-
-use App\Http\Requests\Location\LocationIndexRequest;
-use App\Http\Requests\Location\LocationDestroyRequest;
 
 class LocationController extends Controller
 {
@@ -42,6 +42,14 @@ class LocationController extends Controller
 
     public function destroy(LocationDestroyRequest $request) {
         return parent::abstractDestroy($request);
+    }
+
+    public function store(LocationStoreRequest $request) {
+        return parent::abstractStore($request);
+    }
+
+    public function update(LocationUpdateRequest $request) {
+        return parent::abstractUpdate($request);
     }
 }
 

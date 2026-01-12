@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Requests\Location;
+
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-
 use Illuminate\Foundation\Http\FormRequest;
 
 class LocationDestroyRequest extends FormRequest
